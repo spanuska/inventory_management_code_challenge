@@ -13,14 +13,6 @@ RSpec.describe Order, type: :model do
         expect(order_upcs).to eq []
       end
     end
-
-    context 'when it has 3 UPCs' do
-      it 'returns an array containing 3 UPCs' do
-        subject.upcs << upc << upc2 << upc3
-
-        expect(subject.upcs).to match_array [upc, upc2, upc3]
-      end
-    end
   end
 
   describe '#add_upc' do

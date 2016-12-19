@@ -5,7 +5,15 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Setup
+** rails version is 4.2.6, ruby is  2.2.4
+** To setup the app, download the repository to your machine, and from the command line run these commands:
+    *** ‘bundle install’ to install gems & dependencies
+    *** 'rake db:create rake db:schema:load' to set up the db
+    *** 'rspec spec/models’ to run the tests
+        ***** There are tests for the Order and Warehouse models; for the sake of brevity, association tests have not been included
+
+* Ruby & Rails version
 
 * System dependencies
 
