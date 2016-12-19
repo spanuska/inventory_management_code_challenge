@@ -69,4 +69,8 @@ RSpec.describe Warehouse, type: :model do
       end
     end
   end
+
+  xcontext 'when there is insufficent inventory to create a shipment' do
+    # omitted for the sake of brevity, but in production would be sure to account for the negative case of the context above
+  end
 end

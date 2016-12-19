@@ -1,36 +1,49 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Setup & Running The Tests
+* rails version is 4.2.6, ruby is  2.2.4
+* To setup the app, download the repository to your machine, and from the command line run these commands:
+    * ‘bundle install’ to install gems & dependencies
+    * 'rake db:create rake db:schema:load' to set up the db
+    * 'rspec spec/models’ to run the tests
+        * There are tests for the Order and Warehouse models; for the sake of brevity, association tests have not been included
 
-Things you may want to cover:
+### The Domain Model
+The domain model is described below, and is illustrated in `domain_model_and_associations.pdf`
+* Product: A thing we sell, transitions from allocation in inventory at a warehouse to allocation in a shipment
+    * Associations
+        * belongs_to :allocator, polymorphic: true; this association is illustrated in `polymorphic_associations_allocator_erd.pdf`
+        * belongs_to :upc
+* Order: Has a list of upcs, which will be used to find inventory of corresponding products
+    * Associations
+        * has_one :shipment
+        * has_and_belongs_to_many :upcs
+        * belongs_to :warehouse
+* Warehouse: A place that stores inventory and creates shipments
+    * Associations
+        * has_many :orders
+        * has_many :shipments
+        * has_many :products, as: :allocator
+* Shipment: A collection of products fulfilled by a warehouse based on an order
+    * Associations
+        * belongs_to :warehouse
+        * has_many :products, as: :allocator
+        * belongs_to :order
+* Upc: Unique code for each product sold
+    * Associations
+        * has_many :products
+        * has_and_belongs_to_many :orders
 
-* Setup
-** rails version is 4.2.6, ruby is  2.2.4
-** To setup the app, download the repository to your machine, and from the command line run these commands:
-    *** ‘bundle install’ to install gems & dependencies
-    *** 'rake db:create rake db:schema:load' to set up the db
-    *** 'rspec spec/models’ to run the tests
-        ***** There are tests for the Order and Warehouse models; for the sake of brevity, association tests have not been included
+### Business Logic & Behavior Flow
+Business Logic is concentrated in the Order & Warehouse models, as reflected in the tests
+* Behavior flow - assumptions & notes
+    * In `OrdersController#create` (omitted for the sake of brevity in this app “sketch”)
+        * `@order` is created; `@order` has a list of UPCs, which correspond to products and inventory in warehouses
+        * `@order.assign_to_warehouse` finds warehouse with sufficient inventory to fulfill the order; @warehouse = @order.warehouse
+        * `@warehouse.create_shipment(@order)` creates a shipment, which removes products from its own inventory and allocates them to the shipment
+    * Assumptions
+        * An entire order/shipment is fulfilled by one warehouse; don’t need to look in multiple warehouses for pieces of order
+        * Orders are placed, then sent to a warehouse, where the shipment is immediately created. Of course, in reality we would need to consider state for orders, warehouses, and shipments, but for the purposes of the challenge, our whole system is VERY efficient!
+* A few comments can be found inline where clarification may be helpful.
 
-* Ruby & Rails version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+### Thanks for reviewing my work for this challenge! I look forward to getting your feedback!

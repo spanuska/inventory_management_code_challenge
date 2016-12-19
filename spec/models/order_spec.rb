@@ -9,8 +9,8 @@ RSpec.describe Order, type: :model do
   describe '#upcs' do
     context 'when it is initialized' do
       it 'returns an empty array' do
-        order_upcs = subject.upcs
-        expect(order_upcs).to eq []
+
+        expect(subject.upcs).to eq []
       end
     end
   end
